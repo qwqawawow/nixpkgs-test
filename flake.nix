@@ -8,6 +8,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-master.url = "github:NixOS/nixpkgs/master";
     nix-github-actions = {
       url = "github:nix-community/nix-github-actions";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -20,6 +21,7 @@
     {
       self,
       nixpkgs,
+      nixpkgs-master,
       nix-github-actions,
     }:
     let
@@ -32,15 +34,22 @@
       ];
       # Helper to provide system-specific attributes
       forAllSystems =
-        f: nixpkgs.lib.genAttrs allSystems (system: f { pkgs = import nixpkgs { inherit system; }; });
+        f:
+        nixpkgs.lib.genAttrs allSystems (
+          system:
+          f {
+            pkgs = import nixpkgs { inherit system; };
+            pkgs-m = import nixpkgs { inherit system; };
+          }
+        );
     in
     {
       packages = forAllSystems (
-        { pkgs }:
+        { pkgs,pkgs-m }:
         {
           #ncmpcpp-clang = (pkgs.callPackage ./ncmpcpp.nix { stdenv = pkgs.clangStdenv; });
           #ncmpcpp = (pkgs.callPackage ./ncmpcpp.nix { });
-          boost = pkgs.boost;
+          boost = pkgs-m.boost;
           info = pkgs.stdenv.mkDerivation {
             name = "info";
             phases = "buildPhase";
@@ -48,6 +57,7 @@
               echo "debug" > $out
               echo $($CC --version)
               echo ${pkgs.boost.stdenv.cc.version}
+              echo nixpkgs-master ${pkgs-m.boost.stdenv.cc.version}
             '';
           };
         }
