@@ -12,6 +12,7 @@
   curl,
   automake,
   libtool,
+  llvmPackages_18, # for darwin (24.11 stdenv.cc = clang16  )
   autoconf,
   outputsSupport ? true, # outputs screen
   visualizerSupport ? false,
@@ -20,8 +21,12 @@
   taglibSupport ? true,
   taglib, # tag editor
 }:
-
-stdenv.mkDerivation rec {
+let
+  #Darwin's stdenv.cc is clang 16 doesn't fully support c++20
+  #and nixpkgs(25.05 would use llvm19 )
+  stdenv' = if stdenv.isDarwin then llvmPackages_18.stdenv else stdenv;
+in
+stdenv'.mkDerivation rec {
   pname = "ncmpcpp";
   version = "0.10";
 
@@ -38,10 +43,10 @@ stdenv.mkDerivation rec {
 
   configureFlags =
     [ "BOOST_LIB_SUFFIX=" ]
-    ++ lib.optional outputsSupport "--enable-outputs"
-    ++ lib.optional visualizerSupport "--enable-visualizer --with-fftw"
-    ++ lib.optional clockSupport "--enable-clock"
-    ++ lib.optional taglibSupport "--with-taglib";
+    ++ (lib.optional outputsSupport "--enable-outputs")
+    ++ (lib.optional visualizerSupport "--enable-visualizer --with-fftw")
+    ++ (lib.optional clockSupport "--enable-clock")
+    ++ (lib.optional taglibSupport "--with-taglib");
 
   nativeBuildInputs = [
     autoconf
@@ -58,18 +63,16 @@ stdenv.mkDerivation rec {
     libiconv
     icu
     curl
-  ] ++ lib.optional visualizerSupport fftw 
-    ++ lib.optional taglibSupport taglib;
+  ] ++ (lib.optional visualizerSupport fftw) ++ (lib.optional taglibSupport taglib);
 
-  preConfigure =
-    ''
-      ./autogen.sh
-    ''
-    + lib.optionalString stdenv.isDarwin ''
-      # clang16(24.11 darwin) doesn't support c++20
-      substituteInPlace ./configure \
-        --replace-fail "std=c++20" "std=c++17"
-    '';
+  preConfigure = ''
+    ./autogen.sh
+  '';
+  # + lib.optionalString stdenv.isDarwin ''
+  #   # clang16(24.11 darwin) doesn't support c++20
+  #   substituteInPlace ./configure \
+  #     --replace-fail "std=c++20" "std=c++17"
+  # '';
 
   meta = with lib; {
     description = "Featureful ncurses based MPD client inspired by ncmpc";

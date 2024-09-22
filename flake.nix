@@ -48,19 +48,27 @@
         { pkgs,pkgs-m }:
         {
           #ncmpcpp-clang = (pkgs.callPackage ./ncmpcpp.nix { stdenv = pkgs.clangStdenv; });
-          #ncmpcpp = (pkgs.callPackage ./ncmpcpp.nix { });
-          boost = pkgs-m.boost;
-          info = pkgs.stdenv.mkDerivation {
-            name = "info";
-            phases = "buildPhase";
-            buildPhase = ''
-              echo "debug" > $out
-              echo $($CC --version)
-              echo ${pkgs.boost.stdenv.cc.version}
-              echo nixpkgs-master ${pkgs-m.boost.stdenv.cc.version}
-            '';
-          };
-        }
+        ncmpcpp = (pkgs.callPackage ./ncmpcpp.nix { });
+          #   boost = pkgs-m.boost;
+
+          #
+          #
+          # stdenv = if stdenv.isDarwin then overrideSDK stdenv "11.0" else stdenv;
+          #
+          #
+          #
+          #
+        #   info = pkgs.stdenv.mkDerivation {
+        #     name = "info";
+        #     phases = "buildPhase";
+        #     buildPhase = ''
+        #       echo "debug" > $out
+        #       echo $($CC --version)
+        #       echo ${pkgs.boost.stdenv.cc.version}
+        #       echo nixpkgs-master ${pkgs-m.boost.stdenv.cc.version}
+        #     '';
+        #   };
+         }
       );
 
       githubActions = nix-github-actions.lib.mkGithubMatrix {
