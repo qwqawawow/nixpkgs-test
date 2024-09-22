@@ -44,10 +44,10 @@ stdenv.mkDerivation rec {
     ++ lib.optional taglibSupport "--with-taglib";
 
   nativeBuildInputs = [
-    pkg-config
+    autoconf
     automake
     libtool
-    autoconf
+    pkg-config
   ] ++ lib.optional taglibSupport taglib;
 
   buildInputs = [
@@ -58,11 +58,18 @@ stdenv.mkDerivation rec {
     libiconv
     icu
     curl
-  ] ++ lib.optional visualizerSupport fftw ++ lib.optional taglibSupport taglib;
+  ] ++ lib.optional visualizerSupport fftw 
+    ++ lib.optional taglibSupport taglib;
 
-  preConfigure = ''
-    ./autogen.sh
-  '';
+  preConfigure =
+    ''
+      ./autogen.sh
+    ''
+    + lib.optionalString stdenv.isDarwin ''
+      # clang16(24.11 darwin) doesn't support c++20
+      substituteInPlace ./configure \
+        --replace-fail "std=c++20" "std=c++17"
+    '';
 
   meta = with lib; {
     description = "Featureful ncurses based MPD client inspired by ncmpc";
