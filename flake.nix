@@ -50,7 +50,7 @@
           #ncmpcpp-clang = (pkgs.callPackage ./ncmpcpp.nix { stdenv = pkgs.clangStdenv; });
           #ncmpcpp = (pkgs.callPackage ./ncmpcpp.nix { });
           #        cling = (pkgs.callPackage ./cling.nix { });
-          keyviz = (pkgs.callPackage ./keyviz.nix);
+          keyviz = (pkgs.callPackage ./keyviz.nix { flutter = pkgs.flutter323; });
           #   boost = pkgs-m.boost;
 
           #
