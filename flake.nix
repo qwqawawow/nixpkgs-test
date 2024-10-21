@@ -49,7 +49,8 @@
         {
           #ncmpcpp-clang = (pkgs.callPackage ./ncmpcpp.nix { stdenv = pkgs.clangStdenv; });
           #ncmpcpp = (pkgs.callPackage ./ncmpcpp.nix { });
-        cling = (pkgs.callPackage ./cling.nix { });
+          #        cling = (pkgs.callPackage ./cling.nix { });
+          keyviz = (pkgs.callPackage ./keyviz.nix);
           #   boost = pkgs-m.boost;
 
           #
