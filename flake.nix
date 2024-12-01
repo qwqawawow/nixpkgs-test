@@ -39,7 +39,7 @@
           system:
           f {
             pkgs = import nixpkgs { inherit system; };
-            pkgs-m = import nixpkgs { inherit system; };
+            pkgs-m = import nixpkgs-master { inherit system; };
           }
         );
     in
@@ -50,7 +50,7 @@
           #ncmpcpp-clang = (pkgs.callPackage ./ncmpcpp.nix { stdenv = pkgs.clangStdenv; });
           #ncmpcpp = (pkgs.callPackage ./ncmpcpp.nix { });
           #        cling = (pkgs.callPackage ./cling.nix { });
-          poac = (pkgs.callPackage ./poac.nix { });
+          poac = (pkgs-m.callPackage ./poac.nix { });
           #          keyviz = (pkgs.callPackage ./keyviz.nix { flutter = pkgs.flutter323; });
           #   boost = pkgs-m.boost;
 
@@ -76,8 +76,8 @@
 
       githubActions = nix-github-actions.lib.mkGithubMatrix {
         checks = nixpkgs.lib.getAttrs [
-          "x86_64-linux"
           "aarch64-darwin"
+          "x86_64-darwin"
         ] self.packages;
       };
     };
