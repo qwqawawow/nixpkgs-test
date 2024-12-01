@@ -62,6 +62,7 @@ stdenv.mkDerivation rec {
   installFlags = [ "PREFIX=${placeholder "out"}" ];
 
   meta = {
+    broken = (stdenv.hostPlatform.isDarwin && stdenv.hostPlatform.isx86_64);
     homepage = "https://poac.dev";
     description = "A package manager and build system for C++";
     license = lib.licenses.asl20;
