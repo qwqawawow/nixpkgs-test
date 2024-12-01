@@ -45,12 +45,13 @@
     in
     {
       packages = forAllSystems (
-        { pkgs,pkgs-m }:
+        { pkgs, pkgs-m }:
         {
           #ncmpcpp-clang = (pkgs.callPackage ./ncmpcpp.nix { stdenv = pkgs.clangStdenv; });
           #ncmpcpp = (pkgs.callPackage ./ncmpcpp.nix { });
           #        cling = (pkgs.callPackage ./cling.nix { });
-          keyviz = (pkgs.callPackage ./keyviz.nix { flutter = pkgs.flutter323; });
+          poac = (pkgs.callPackage ./poac.nix { });
+          #          keyviz = (pkgs.callPackage ./keyviz.nix { flutter = pkgs.flutter323; });
           #   boost = pkgs-m.boost;
 
           #
@@ -60,17 +61,17 @@
           #
           #
           #
-        #   info = pkgs.stdenv.mkDerivation {
-        #     name = "info";
-        #     phases = "buildPhase";
-        #     buildPhase = ''
-        #       echo "debug" > $out
-        #       echo $($CC --version)
-        #       echo ${pkgs.boost.stdenv.cc.version}
-        #       echo nixpkgs-master ${pkgs-m.boost.stdenv.cc.version}
-        #     '';
-        #   };
-         }
+          #   info = pkgs.stdenv.mkDerivation {
+          #     name = "info";
+          #     phases = "buildPhase";
+          #     buildPhase = ''
+          #       echo "debug" > $out
+          #       echo $($CC --version)
+          #       echo ${pkgs.boost.stdenv.cc.version}
+          #       echo nixpkgs-master ${pkgs-m.boost.stdenv.cc.version}
+          #     '';
+          #   };
+        }
       );
 
       githubActions = nix-github-actions.lib.mkGithubMatrix {
