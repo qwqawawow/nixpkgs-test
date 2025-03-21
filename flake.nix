@@ -47,10 +47,11 @@
       packages = forAllSystems (
         { pkgs, pkgs-m }:
         {
+          epiq = (pkgs-m.callPackage ./empiriqa.nix { });
           #ncmpcpp-clang = (pkgs.callPackage ./ncmpcpp.nix { stdenv = pkgs.clangStdenv; });
           #ncmpcpp = (pkgs.callPackage ./ncmpcpp.nix { });
           #        cling = (pkgs.callPackage ./cling.nix { });
-          poac = (pkgs-m.callPackage ./poac.nix { });
+          #         poac = (pkgs-m.callPackage ./poac.nix { });
           #          keyviz = (pkgs.callPackage ./keyviz.nix { flutter = pkgs.flutter323; });
           #   boost = pkgs-m.boost;
 
