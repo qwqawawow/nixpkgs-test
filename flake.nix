@@ -47,7 +47,8 @@
       packages = forAllSystems (
         { pkgs, pkgs-m }:
         {
-          epiq = (pkgs-m.callPackage ./empiriqa.nix { });
+          cargo-seek = (pkgs-m.callPackage ./cargo-seek.nix { });
+          #epiq = (pkgs-m.callPackage ./empiriqa.nix { });
           #ncmpcpp-clang = (pkgs.callPackage ./ncmpcpp.nix { stdenv = pkgs.clangStdenv; });
           #ncmpcpp = (pkgs.callPackage ./ncmpcpp.nix { });
           #        cling = (pkgs.callPackage ./cling.nix { });
